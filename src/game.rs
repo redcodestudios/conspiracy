@@ -3,6 +3,10 @@ extern crate sdl2;
 use sdl2::Sdl;
 use sdl2::video::Window;
 use sdl2::render::Canvas;
+use sdl2::pixels::Color;
+use sdl2::event::Event;
+use sdl2::keyboard::Keycode;
+use std::time::Duration;
     
 pub struct Game<'a> {
     pub name: &'a str,
@@ -24,7 +28,9 @@ impl<'a> Game<'a> {
             .build()
             .unwrap();
 
-        let canvas = window.into_canvas().build().unwrap();
+        let mut canvas = window.into_canvas().build().unwrap();
+        canvas.set_draw_color(Color::RGB(0, 0, 0));
+        canvas.clear();
 
         Game { 
             name: name, 
@@ -33,5 +39,31 @@ impl<'a> Game<'a> {
             sdl_ctx: sdl_ctx,
             canvas: canvas
         }
+    }
+    
+    pub fn run(&mut self) {
+        self.canvas.present();
+        
+        let mut event_pump = self.sdl_ctx.event_pump().unwrap();
+        'running: loop {
+            for event in event_pump.poll_iter() {
+                match event {
+                    Event::Quit {..} |
+                    Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+                        break 'running
+                    },
+                    _ => {}
+                }
+            }
+        
+            self.update();
+
+            self.canvas.present();
+            ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        }
+    }
+
+    fn update(&self) {
+        
     }
 }
