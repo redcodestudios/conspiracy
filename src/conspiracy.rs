@@ -6,10 +6,11 @@ use amethyst::{
 pub struct Conspiracy;
 
 impl SimpleState for Conspiracy {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+    fn on_start(&mut self, data: StateData<'_, GameData>) {
+
     }
 
-    fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+    fn update(&mut self, _: &mut StateData<'_, GameData>) -> SimpleTrans {
         Trans::None
     }
 }

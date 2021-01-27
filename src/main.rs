@@ -4,20 +4,24 @@ use std::time::Duration;
 
 use amethyst::{
     prelude::*,
+    assets::{LoaderBundle},
     renderer::{
         plugins::{RenderFlat2D, RenderToWindow},
         types::DefaultBackend,
         RenderingBundle,
+        rendy::hal::command::ClearColor,
     },
     core::{transform::TransformBundle},
-    input::{InputBundle, StringBindings},
-    ui::{RenderUi, UiBundle},
+    input::{InputBundle, Bindings},
+    ui::{RenderUi},
     utils::application_root_dir,
 };
 
 use conspiracy::*;
 
-const BACKGROUND_COLOUR: [f32; 4] = [0.25, 0.25, 0.25, 0.0];
+const BACKGROUND_COLOUR: ClearColor = ClearColor {
+    float32: [0.0, 0.0, 0.0, 1.0],
+};
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -33,23 +37,23 @@ fn main() -> amethyst::Result<()> {
         }
     };
 
-    let game_data = GameDataBuilder::default()
-        .with_bundle(TransformBundle::new())?
-        .with_bundle(
-            InputBundle::<StringBindings>::new().with_bindings_from_file(key_bindings_path)?,
-            )?
-        .with_bundle(UiBundle::<StringBindings>::new())?
-        .with_bundle(
+    let mut dispatcher = DispatcherBuilder::default();
+    dispatcher
+        .add_bundle(LoaderBundle)
+        .add_bundle(TransformBundle)
+        .add_bundle(
+            InputBundle::new().with_bindings_from_file(key_bindings_path)?,
+        )
+        .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(
-                    RenderToWindow::from_config_path(display_config_path)?
-                        .with_clear(BACKGROUND_COLOUR),
+                    RenderToWindow::from_config_path(display_config_path)?.with_clear(BACKGROUND_COLOUR),
                 )
                 .with_plugin(RenderFlat2D::default())
                 .with_plugin(RenderUi::default()),
-        )?;
+        );
 
-    let mut game = Application::new(assets_dir, Conspiracy::default(), game_data)?;
+    let mut game = Application::new(assets_dir, Conspiracy::default(), dispatcher)?;
 
     game.run();
     Ok(())
