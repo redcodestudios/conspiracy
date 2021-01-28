@@ -13,7 +13,7 @@ use amethyst::{
     },
     core::{transform::TransformBundle},
     input::{InputBundle, Bindings},
-    ui::{RenderUi},
+    ui::{RenderUi, UiBundle},
     utils::application_root_dir,
 };
 
@@ -29,13 +29,7 @@ fn main() -> amethyst::Result<()> {
     let display_config_path = app_root.join("config/display.ron");
     let assets_dir = app_root.join("assets/");
 
-    let key_bindings_path = {
-        if cfg!(feature = "sdl_controller") {
-            app_root.join("config/input_controller.ron")
-        } else {
-            app_root.join("config/input.ron")
-        }
-    };
+    let key_bindings_path = app_root.join("config/input.ron");
 
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher
@@ -44,6 +38,7 @@ fn main() -> amethyst::Result<()> {
         .add_bundle(
             InputBundle::new().with_bindings_from_file(key_bindings_path)?,
         )
+        .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(
