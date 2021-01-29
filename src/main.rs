@@ -1,4 +1,5 @@
 mod conspiracy;
+mod systems;
 
 use amethyst::{
     prelude::*,
@@ -16,6 +17,7 @@ use amethyst::{
 };
 
 use conspiracy::*;
+use systems::player::PlayerSystem;
 
 const BACKGROUND_COLOUR: ClearColor = ClearColor {
     float32: [0.0, 0.0, 0.0, 1.0],
@@ -36,6 +38,7 @@ fn main() -> amethyst::Result<()> {
         .add_bundle(
             InputBundle::new().with_bindings_from_file(key_bindings_path)?,
         )
+        .add_system(Box::new(PlayerSystem))
         .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
