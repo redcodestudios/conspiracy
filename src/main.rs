@@ -1,7 +1,5 @@
 mod conspiracy;
 
-use std::time::Duration;
-
 use amethyst::{
     prelude::*,
     assets::{LoaderBundle},
@@ -12,7 +10,7 @@ use amethyst::{
         rendy::hal::command::ClearColor,
     },
     core::{transform::TransformBundle},
-    input::{InputBundle, Bindings},
+    input::{InputBundle},
     ui::{RenderUi, UiBundle},
     utils::application_root_dir,
 };
@@ -48,7 +46,7 @@ fn main() -> amethyst::Result<()> {
                 .with_plugin(RenderUi::default()),
         );
 
-    let mut game = Application::new(assets_dir, Conspiracy::default(), dispatcher)?;
+    let game = Application::new(assets_dir, Conspiracy::default(), dispatcher)?;
 
     game.run();
     Ok(())
