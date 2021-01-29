@@ -9,4 +9,5 @@ default = []
 vulkan = ["amethyst/vulkan"]
 
 [dependencies]
-amethyst = {path="amethyst", features=["ui"]}
+amethyst = {path="amethyst", features=["ui","animation"]}
+serde = "^1"

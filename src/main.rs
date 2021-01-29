@@ -13,11 +13,14 @@ use amethyst::{
     core::{transform::TransformBundle},
     input::{InputBundle},
     ui::{RenderUi, UiBundle},
+    animation::{AnimationBundle},
+    renderer::{SpriteRender},
     utils::application_root_dir,
 };
 
 use conspiracy::*;
 use systems::player::PlayerSystem;
+use systems::animation::AnimationSystem;
 
 const BACKGROUND_COLOUR: ClearColor = ClearColor {
     float32: [0.0, 0.0, 0.0, 1.0],
@@ -35,10 +38,12 @@ fn main() -> amethyst::Result<()> {
     dispatcher
         .add_bundle(LoaderBundle)
         .add_bundle(TransformBundle)
+        .add_bundle(AnimationBundle::<BiluAnimations, SpriteRender>::default())
         .add_bundle(
             InputBundle::new().with_bindings_from_file(key_bindings_path)?,
         )
         .add_system(Box::new(PlayerSystem))
+        .add_system(Box::new(AnimationSystem))
         .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
